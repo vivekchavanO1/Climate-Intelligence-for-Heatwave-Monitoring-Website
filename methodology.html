@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodology — HeatScope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+.timeline{position:relative;margin-top:30px;padding-left:46px;}
+.timeline::before{content:'';position:absolute;left:17px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--plasma),var(--magma));}
+.phase{position:relative;margin-bottom:26px;}
+.phase .dot{position:absolute;left:-46px;top:2px;width:36px;height:36px;border-radius:50%;background:var(--panel-2);border:1px solid var(--plasma);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--plasma);font-weight:700;}
+.phase .card{padding:18px 20px;}
+.phase h3{font-family:var(--disp);font-size:16.5px;margin-bottom:6px;}
+.phase p{color:var(--text-dim);font-size:13px;line-height:1.65;margin-bottom:10px;}
+.stackrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.stack-item{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--panel);border:1px solid var(--border-soft);border-radius:11px;font-size:12.5px;}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="topnav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html"><span class="nav-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M4.2 4.2l4.2 4.2M15.6 15.6l4.2 4.2M2 12h6M16 12h6M4.2 19.8l4.2-4.2M15.6 8.4l4.2-4.2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>HeatScope</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="methodology.html" class="active">Methodology</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <div class="shell section">
+    <div class="eyebrow">Solution approach</div>
+    <h1 class="h1" style="margin-bottom:14px;">Five phases, from raw signal to dispatched advisory.</h1>
+    <p class="lead">The framework combines historical IMD meteorological observations with localized IoT-based weather-station readings, moving through analytics, AI intelligence, validation, and stakeholder-specific decision support.</p>
+
+    <div class="timeline">
+      <div class="phase"><div class="dot">01</div><div class="card">
+        <h3>Meteorological Data Acquisition</h3>
+        <p>Historical observations from IMD are collected, quality-checked, and structured into region-wise datasets ready for analysis and model development.</p>
+      </div></div>
+      <div class="phase"><div class="dot">02</div><div class="card">
+        <h3>AI-Driven Heatwave Analytics &amp; Prediction</h3>
+        <p>Region-wise and seasonal analysis surfaces spatio-temporal temperature patterns; models forecast maximum temperature, predict heatwaves, and classify severity.</p>
+      </div></div>
+      <div class="phase"><div class="dot">03</div><div class="card">
+        <h3>IoT-Enabled Weather Monitoring</h3>
+        <p>Automated Weather Stations (AWS) provide continuous, localized ground-truth readings to support local heat-condition assessment.</p>
+      </div></div>
+      <div class="phase"><div class="dot">04</div><div class="card">
+        <h3>Forecast Validation &amp; Heatwave Intelligence</h3>
+        <p>AWS observations are cross-checked against AI forecasts, refining confidence in region-wise heatwave calls before they reach the decision-support layer.</p>
+      </div></div>
+      <div class="phase"><div class="dot">05</div><div class="card">
+        <h3>Advisory, Early Warning &amp; Decision Support</h3>
+        <p>A dashboard visualizes hotspots and severity; an LLM translates technical forecasts into stakeholder-specific advisories for citizens, farmers, health agencies, and authorities — always with human-in-the-loop review.</p>
+      </div></div>
+    </div>
+
+    <div style="margin-top:50px;">
+      <h2 class="h2" style="margin-bottom:6px;">What powers the dashboard</h2>
+      <p class="muted" style="font-size:13.5px;margin-bottom:6px;">The live prototype at <a href="dashboard.html" style="color:var(--plasma);">/dashboard</a> implements phases 2, 4, and 5 end-to-end.</p>
+      <div class="stackrow">
+        <div class="stack-item">🌐 Open-Meteo live forecast API</div>
+        <div class="stack-item">📊 Chart.js trend visualization</div>
+        <div class="stack-item">🧭 Terrain-aware severity classifier</div>
+        <div class="stack-item">🛰️ Simulated AWS ground-truth validation</div>
+        <div class="stack-item">✦ LLM-assisted advisory generation</div>
+      </div>
+    </div>
+
+    <div class="hero-cta" style="display:flex;gap:12px;margin-top:40px;">
+      <a class="btn btn-primary" href="dashboard.html">Try the live dashboard →</a>
+      <a class="btn btn-ghost" href="about.html">Back to project overview</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="nav-brand" style="margin-bottom:8px;">HeatScope</div>
+      <p>Prototype decision-support platform for the KJS-CES-01 use case, developed by Vivek Santosh Chavan. All forecasts and advisories are illustrative and require human-in-the-loop review before real-world dissemination.</p>
+    </div>
+    <div class="foot-links">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="dashboard.html">Dashboard</a><a href="methodology.html">Methodology</a><a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+<script src="assets/nav.js"></script>
+</body>
+</html>

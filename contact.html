@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — HeatScope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;margin-top:34px;align-items:start;}
+@media (max-width:860px){.contact-grid{grid-template-columns:1fr;}}
+.info-row{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--border-soft);}
+.info-row:last-child{border-bottom:none;}
+.info-row .ic{width:34px;height:34px;border-radius:9px;background:var(--panel-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.info-row b{display:block;font-size:13px;}
+.info-row span{font-size:12px;color:var(--text-dim);}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="topnav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html"><span class="nav-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M4.2 4.2l4.2 4.2M15.6 15.6l4.2 4.2M2 12h6M16 12h6M4.2 19.8l4.2-4.2M15.6 8.4l4.2-4.2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>HeatScope</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="contact.html" class="active">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <div class="shell section">
+    <div class="eyebrow">Get in touch</div>
+    <h1 class="h1" style="margin-bottom:14px;">Questions, feedback, or collaboration.</h1>
+    <p class="lead">Reach the project team behind HeatScope (KJS-CES-01), or send feedback on the dashboard prototype.</p>
+
+    <div class="contact-grid">
+      <div class="card">
+        <h2 class="h2" style="font-size:16.5px;margin-bottom:6px;">Project contact</h2>
+        <div class="info-row"><div class="ic">👤</div><div><b>Project Owner</b><span>Vivek Santosh Chavan </span></div></div>
+        <div class="info-row"><div class="ic">🏫</div><div><b>Institution</b><span>K J Somaiya Institute of Technology, Mumbai</span></div></div>
+        <div class="info-row"><div class="ic">🛰️</div><div><b>Collaborating Org.</b><span>India Meteorological Department, Mumbai–Pune</span></div></div>
+        <div class="info-row"><div class="ic">🆔</div><div><b>Use Case ID</b><span>KJS-CES-01</span></div></div>
+      </div>
+
+      <div class="card">
+        <form id="contactForm" novalidate>
+          <div class="field" id="f-name">
+            <label for="name">Full name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+            <div class="err">Please enter your name.</div>
+          </div>
+          <div class="field" id="f-email">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            <div class="err">Please enter a valid email address.</div>
+          </div>
+          <div class="field" id="f-role">
+            <label for="role">I am a</label>
+            <select id="role" name="role" required>
+              <option value="">Select one</option>
+              <option>Citizen</option>
+              <option>Farmer</option>
+              <option>Health Dept. representative</option>
+              <option>Local authority</option>
+              <option>Student / Researcher</option>
+              <option>Other</option>
+            </select>
+            <div class="err">Please select an option.</div>
+          </div>
+          <div class="field" id="f-message">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="How can we help?" required></textarea>
+            <div class="err">Please enter a message.</div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="submitBtn">Send message</button>
+          <div class="form-success" id="formSuccess" style="margin-top:14px;">✓ Message received. This is a static prototype form, so nothing is sent to a server yet — but the flow works end to end.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="nav-brand" style="margin-bottom:8px;">HeatScope</div>
+      <p>Prototype decision-support platform for the KJS-CES-01 use case, developed by Vivek Santosh Chavan. All forecasts and advisories are illustrative and require human-in-the-loop review before real-world dissemination.</p>
+    </div>
+    <div class="foot-links">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="dashboard.html">Dashboard</a><a href="methodology.html">Methodology</a><a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+<script src="assets/nav.js"></script>
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var ok = true;
+  var name = document.getElementById('name');
+  var email = document.getElementById('email');
+  var role = document.getElementById('role');
+  var message = document.getElementById('message');
+  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function set(fieldId, valid){
+    var f = document.getElementById(fieldId);
+    f.classList.toggle('invalid', !valid);
+    if(!valid) ok = false;
+  }
+  set('f-name', name.value.trim().length > 0);
+  set('f-email', emailRe.test(email.value.trim()));
+  set('f-role', role.value.trim().length > 0);
+  set('f-message', message.value.trim().length > 0);
+
+  var successBox = document.getElementById('formSuccess');
+  if(ok){
+    successBox.classList.add('show');
+    this.reset();
+    successBox.scrollIntoView({behavior:'smooth', block:'nearest'});
+  } else {
+    successBox.classList.remove('show');
+  }
+});
+</script>
+</body>
+</html>

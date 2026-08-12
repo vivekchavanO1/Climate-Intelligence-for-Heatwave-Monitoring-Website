@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — HeatScope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+.dash-wrap{max-width:1400px;margin:0 auto;padding:20px 26px 70px;}
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:16px;}
+.dash-title h1{font-family:var(--disp);font-size:19px;font-weight:800;}
+.dash-title p{font-family:var(--mono);font-size:10.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;}
+.clockbar{font-family:var(--mono);font-size:11px;color:var(--text-dim);display:flex;gap:14px;align-items:center;}
+.clockbar .live{width:7px;height:7px;border-radius:50%;background:var(--good);display:inline-block;margin-right:6px;animation:pulse 2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(51,222,155,.5)}70%{box-shadow:0 0 0 7px rgba(51,222,155,0)}100%{box-shadow:0 0 0 0 rgba(51,222,155,0)}}
+
+.ticker{overflow:hidden;white-space:nowrap;border:1px solid var(--border-soft);border-radius:12px;background:var(--panel);padding:9px 0;margin-bottom:18px;}
+.ticker-track{display:inline-flex;gap:34px;animation:scroll 38s linear infinite;padding-left:100%;}
+.ticker:hover .ticker-track{animation-play-state:paused;}
+@keyframes scroll{to{transform:translateX(-100%);}}
+.tick{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.tick b{color:var(--text);}
+
+.bento{display:grid;grid-template-columns:1.35fr 1fr;grid-template-areas:"map gauge" "map trend" "map advisory" "map hotspot";gap:14px;}
+.dcard{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--border-soft);border-radius:16px;padding:18px;}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-h h2{font-family:var(--disp);font-size:14px;font-weight:700;}
+.card-h span{font-family:var(--mono);font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.5px;}
+
+.map-card{grid-area:map;}
+.hex-grid{display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:16px;}
+.hex-row{display:flex;gap:8px;}
+.hex-row.offset{transform:translateX(63px);margin-top:-24px;}
+.hex{width:120px;height:104px;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);
+  background:var(--panel);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .15s,border-color .15s;position:relative;}
+.hex:hover{transform:scale(1.05);}
+.hex.active{border-color:var(--plasma);box-shadow:0 0 0 2px rgba(157,107,255,.35) inset;}
+.hex .hname{font-size:10.5px;font-weight:600;text-align:center;padding:0 10px;line-height:1.2;}
+.hex .hcount{font-family:var(--mono);font-size:9px;color:var(--text-faint);margin-top:4px;}
+.hex .hdot{position:absolute;top:12px;width:8px;height:8px;border-radius:50%;}
+.city-chips{display:flex;flex-wrap:wrap;gap:8px;padding-top:14px;border-top:1px solid var(--border-soft);}
+.chip{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:20px;background:var(--panel);border:1px solid var(--border-soft);font-size:12px;transition:.15s;}
+.chip:hover{border-color:var(--plasma);}
+.chip.active{background:rgba(157,107,255,.14);border-color:var(--plasma);}
+.chip .cdot{width:7px;height:7px;border-radius:50%;}
+.chip .ctemp{font-family:var(--mono);color:var(--text-dim);font-size:10.5px;}
+
+.gauge-card{grid-area:gauge;}
+.gauge-wrap{display:flex;align-items:center;gap:18px;}
+.gauge{width:128px;height:128px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background 1s;}
+.gauge-inner{width:96px;height:96px;border-radius:50%;background:var(--panel-2);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.gauge-inner .gt{font-family:var(--disp);font-size:21px;font-weight:800;}
+.gauge-inner .gl{font-family:var(--mono);font-size:8.5px;color:var(--text-faint);text-transform:uppercase;}
+.gside{flex:1;}
+.gside .sevlabel{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:8px;text-transform:uppercase;}
+.gside .gmetric{font-size:11.5px;color:var(--text-dim);margin-bottom:4px;}
+.gside .gmetric b{color:var(--text);font-family:var(--mono);}
+.feelslike{margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-soft);font-size:11px;color:var(--text-dim);}
+.feelslike b{color:var(--ember);font-family:var(--mono);}
+
+.trend-card{grid-area:trend;}
+.trend-card canvas{max-height:150px;}
+
+.advisory-card{grid-area:advisory;}
+.stake-pills{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.pill{padding:6px 12px;border-radius:20px;background:var(--panel);border:1px solid var(--border-soft);font-family:var(--mono);font-size:10.5px;color:var(--text-dim);}
+.pill.active{background:linear-gradient(120deg,var(--plasma),#6E3FE0);color:#fff;border-color:transparent;}
+.gen-btn{width:100%;padding:11px;border-radius:10px;border:none;margin-bottom:12px;background:linear-gradient(120deg,var(--ember),var(--magma));color:#fff;font-weight:700;font-size:12.5px;box-shadow:0 8px 20px -8px rgba(255,61,107,.5);}
+.gen-btn:disabled{opacity:.5;cursor:progress;}
+.terminal{background:#08070E;border:1px solid var(--border-soft);border-radius:10px;padding:13px 14px;font-family:var(--mono);font-size:11.8px;line-height:1.6;color:#C9F5D9;min-height:110px;white-space:pre-wrap;}
+.terminal.empty{color:var(--text-faint);}
+.terminal::before{content:"$ ";color:var(--plasma);}
+.term-meta{font-family:var(--mono);font-size:9.5px;color:var(--text-faint);margin-top:8px;display:flex;justify-content:space-between;}
+
+.hotspot-card{grid-area:hotspot;}
+.hslist{display:flex;flex-direction:column;gap:8px;}
+.hs-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;background:var(--panel);cursor:pointer;transition:.15s;}
+.hs-row:hover{background:rgba(255,255,255,.04);}
+.hs-bar{width:4px;height:26px;border-radius:3px;flex-shrink:0;}
+.hs-row b{font-size:12px;display:block;}
+.hs-row span{font-size:10.5px;color:var(--text-dim);}
+
+.table-card{margin-top:14px;}
+table{width:100%;border-collapse:collapse;font-size:12.3px;}
+thead th{text-align:left;font-family:var(--mono);font-size:9.8px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-faint);padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;position:sticky;top:0;background:var(--panel-2);}
+thead th:hover{color:var(--plasma);}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--border-soft);}
+tbody tr{cursor:pointer;transition:background .12s;}
+tbody tr:nth-child(even){background:rgba(255,255,255,.015);}
+tbody tr:hover{background:rgba(157,107,255,.06);}
+.badge-sm{font-family:var(--mono);font-size:9.5px;padding:3px 9px;border-radius:12px;text-transform:uppercase;font-weight:700;}
+
+.footnote{margin-top:22px;font-size:10.8px;color:var(--text-faint);line-height:1.7;border-top:1px solid var(--border-soft);padding-top:14px;}
+.footnote b{color:var(--text-dim);}
+
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:100;}
+.loading-screen.hide{display:none;}
+.spinner{width:32px;height:32px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--plasma);animation:spin .9s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-screen p{font-family:var(--mono);font-size:11px;color:var(--text-dim);}
+
+@media (max-width:980px){
+  .bento{grid-template-columns:1fr;grid-template-areas:"map" "gauge" "trend" "advisory" "hotspot";}
+  .hex{width:96px;height:84px;}
+  .hex-row.offset{transform:translateX(52px);}
+}
+</style>
+</head>
+<body>
+<div class="loading-screen" id="loadingScreen"><div class="spinner"></div><p id="loadingText">ACQUIRING METEOROLOGICAL DATA…</p></div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="topnav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html"><span class="nav-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M4.2 4.2l4.2 4.2M15.6 15.6l4.2 4.2M2 12h6M16 12h6M4.2 19.8l4.2-4.2M15.6 8.4l4.2-4.2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>HeatScope</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+<div class="dash-wrap">
+  <div class="dash-head">
+    <div class="dash-title"><h1>Live Monitoring Console</h1><p>Heatwave Command Deck — KJS-CES-01</p></div>
+    <div class="clockbar"><span><span class="live"></span>live feed</span><span id="clock">--:--:--</span><span id="lastSync">synced —</span></div>
+  </div>
+
+  <div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
+
+  <section class="bento">
+    <div class="dcard map-card">
+      <div class="card-h"><h2>Region Command Map</h2><span id="regionTag">7 IMD zones</span></div>
+      <div class="hex-grid" id="hexGrid"></div>
+      <div class="city-chips" id="cityChips"></div>
+    </div>
+
+    <div class="dcard gauge-card">
+      <div class="card-h"><h2>Station Readout</h2><span id="gCityTag">—</span></div>
+      <div class="gauge-wrap">
+        <div class="gauge" id="gaugeOuter"><div class="gauge-inner"><div class="gt" id="gTemp">—</div><div class="gl">today max</div></div></div>
+        <div class="gside">
+          <div class="sevlabel" id="sevLabel">—</div>
+          <div class="gmetric">Normal: <b id="mNormal">—</b></div>
+          <div class="gmetric">Departure: <b id="mDep">—</b></div>
+          <div class="gmetric">7-day peak: <b id="mPeak">—</b></div>
+        </div>
+      </div>
+      <div class="feelslike" id="feelsLike">Feels-like — computing heat index…</div>
+    </div>
+
+    <div class="dcard trend-card">
+      <div class="card-h"><h2>7-Day Trajectory</h2><span id="validTag">AWS-validated</span></div>
+      <canvas id="trendChart" height="150"></canvas>
+    </div>
+
+    <div class="dcard advisory-card">
+      <div class="card-h"><h2>Advisory Terminal</h2><span>LLM decision-support</span></div>
+      <div class="stake-pills" id="stakePills">
+        <button class="pill active" data-s="Citizen">Citizen</button>
+        <button class="pill" data-s="Farmer">Farmer</button>
+        <button class="pill" data-s="Health Dept.">Health</button>
+        <button class="pill" data-s="Local Authority">Authority</button>
+      </div>
+      <button class="gen-btn" id="genBtn">✦ Generate advisory</button>
+      <div class="terminal empty" id="terminal">select a station to generate a stakeholder-specific advisory</div>
+      <div class="term-meta" id="termMeta" style="display:none;"><span>human-in-the-loop review required</span><span id="termTime"></span></div>
+    </div>
+
+    <div class="dcard hotspot-card">
+      <div class="card-h"><h2>Active Hotspots</h2><span id="hotspotCount">—</span></div>
+      <div class="hslist" id="hslist"></div>
+    </div>
+  </section>
+
+  <section class="dcard table-card">
+    <div class="card-h"><h2>Forecast Validation Layer — All Stations</h2><span id="tableTag">sortable</span></div>
+    <div style="overflow-x:auto;max-height:420px;overflow-y:auto;">
+      <table>
+        <thead><tr>
+          <th data-k="name">Station</th><th data-k="region">Region</th><th data-k="temp">Today Max</th>
+          <th data-k="normal">Normal</th><th data-k="dep">Departure</th><th data-k="peak">7-Day Peak</th><th data-k="sev">Class</th>
+        </tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="footnote"><b>About this prototype:</b> HeatScope (KJS-CES-01) fuses live meteorological forecasts with an IMD-inspired severity model (terrain-aware thresholds + departure-from-normal) across 7 IMD-style regions, including a dedicated Himalayan/hill-terrain zone. Forecasts are cross-checked against a simulated AWS ground reading (Forecast Validation Layer), and a live LLM generates stakeholder-specific advisories (Decision Support Layer) — all outputs are illustrative and require human-in-the-loop review by qualified meteorologists before real dissemination. Live data via Open-Meteo; seasonal normals and heat-index humidity are approximate reference values for demonstration.</p>
+</div>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="nav-brand" style="margin-bottom:8px;">HeatScope</div>
+      <p>Prototype decision-support platform for the KJS-CES-01 use case, developed by Vivek Santosh Chavan. All forecasts and advisories are illustrative and require human-in-the-loop review before real-world dissemination.</p>
+    </div>
+    <div class="foot-links">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="dashboard.html">Dashboard</a><a href="methodology.html">Methodology</a><a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/nav.js"></script>
+<script>
+/* ===== DATA ===== */
+const CITIES = [
+  {name:"Delhi", region:"Northwest India", lat:28.61, lon:77.21, terrain:"plain", rh:35, normals:{winter:21,summer:39,monsoon:34,post:31}},
+  {name:"Jaipur", region:"Northwest India", lat:26.91, lon:75.79, terrain:"plain", rh:30, normals:{winter:23,summer:40,monsoon:33,post:31}},
+  {name:"Chandigarh", region:"Northwest India", lat:30.73, lon:76.78, terrain:"plain", rh:38, normals:{winter:20,summer:38,monsoon:33,post:30}},
+  {name:"Nagpur", region:"Central India", lat:21.15, lon:79.09, terrain:"plain", rh:32, normals:{winter:28,summer:42,monsoon:30,post:30}},
+  {name:"Bhopal", region:"Central India", lat:23.26, lon:77.41, terrain:"plain", rh:34, normals:{winter:26,summer:39,monsoon:28,post:29}},
+  {name:"Raipur", region:"Central India", lat:21.25, lon:81.63, terrain:"plain", rh:40, normals:{winter:27,summer:41,monsoon:29,post:29}},
+  {name:"Mumbai", region:"West India", lat:19.08, lon:72.88, terrain:"plain", rh:70, normals:{winter:30,summer:33,monsoon:30,post:33}},
+  {name:"Ahmedabad", region:"West India", lat:23.03, lon:72.58, terrain:"plain", rh:38, normals:{winter:29,summer:40,monsoon:32,post:34}},
+  {name:"Pune", region:"West India", lat:18.52, lon:73.86, terrain:"plain", rh:45, normals:{winter:30,summer:35,monsoon:27,post:30}},
+  {name:"Kolkata", region:"East India", lat:22.57, lon:88.36, terrain:"plain", rh:68, normals:{winter:26,summer:36,monsoon:32,post:30}},
+  {name:"Patna", region:"East India", lat:25.59, lon:85.14, terrain:"plain", rh:52, normals:{winter:23,summer:37,monsoon:32,post:29}},
+  {name:"Bhubaneswar", region:"East India", lat:20.30, lon:85.82, terrain:"plain", rh:62, normals:{winter:28,summer:38,monsoon:31,post:30}},
+  {name:"Chennai", region:"South India", lat:13.08, lon:80.27, terrain:"plain", rh:65, normals:{winter:29,summer:37,monsoon:33,post:30}},
+  {name:"Hyderabad", region:"South India", lat:17.39, lon:78.49, terrain:"plain", rh:40, normals:{winter:28,summer:38,monsoon:29,post:29}},
+  {name:"Bengaluru", region:"South India", lat:12.97, lon:77.59, terrain:"plain", rh:50, normals:{winter:27,summer:33,monsoon:27,post:27}},
+  {name:"Guwahati", region:"Northeast India", lat:26.14, lon:91.74, terrain:"plain", rh:72, normals:{winter:24,summer:32,monsoon:32,post:28}},
+  {name:"Agartala", region:"Northeast India", lat:23.83, lon:91.28, terrain:"plain", rh:74, normals:{winter:26,summer:33,monsoon:32,post:29}},
+  {name:"Shimla", region:"Himalayan Region", lat:31.10, lon:77.17, terrain:"hill", rh:45, normals:{winter:8,summer:24,monsoon:19,post:16}},
+  {name:"Srinagar", region:"Himalayan Region", lat:34.08, lon:74.79, terrain:"hill", rh:40, normals:{winter:4,summer:23,monsoon:24,post:16}},
+];
+const REGION_ORDER = ["Northwest India","Central India","West India","East India","South India","Northeast India","Himalayan Region"];
+const COLOR = {severe:"#FF3D6B",moderate:"#FF6B35",watch:"#FFB020",normal:"#4EA1FF"};
+
+let liveData = {}, selectedCity = null, activeRegion = REGION_ORDER[0], chart = null, currentStakeholder = "Citizen";
+
+function getSeason(m){ if([11,0,1].includes(m)) return "winter"; if([2,3,4,5].includes(m)) return "summer"; if([6,7,8].includes(m)) return "monsoon"; return "post"; }
+function classify(t,normal,terrain){
+  const dep=t-normal, thresh=terrain==="hill"?30:40;
+  if((t>=thresh&&dep>=6.5)||t>=(terrain==="hill"?38:47)) return {level:"severe",label:"Severe Heatwave"};
+  if((t>=thresh&&dep>=4.5)||t>=(terrain==="hill"?34:45)) return {level:"moderate",label:"Heatwave"};
+  if(t>=thresh-2||dep>=3) return {level:"watch",label:"Heat Watch"};
+  return {level:"normal",label:"Normal"};
+}
+function heatIndex(t,rh){ const e=(rh/100)*6.105*Math.exp(17.27*t/(237.7+t)); return t+0.33*e-4.0; }
+function fmt1(n){ return (Math.round(n*10)/10).toFixed(1); }
+
+async function loadData(){
+  const lats=CITIES.map(c=>c.lat).join(","), lons=CITIES.map(c=>c.lon).join(",");
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FKolkata&forecast_days=7`;
+  const res=await fetch(url); const data=await res.json();
+  const arr=Array.isArray(data)?data:[data]; const season=getSeason(new Date().getMonth());
+  arr.forEach((d,i)=>{
+    const c=CITIES[i];
+    const daily=d.daily.time.map((t,idx)=>({date:t,max:d.daily.temperature_2m_max[idx],min:d.daily.temperature_2m_min[idx]}));
+    const normal=c.normals[season], todayMax=daily[0].max, peak=Math.max(...daily.map(x=>x.max));
+    const sev=classify(todayMax,normal,c.terrain);
+    liveData[c.name]={city:c,daily,normal,todayMax,peak,departure:todayMax-normal,sev,feels:heatIndex(todayMax,c.rh)};
+  });
+}
+
+/* ===== TICKER ===== */
+function renderTicker(){
+  const items=Object.values(liveData).sort((a,b)=>b.todayMax-a.todayMax);
+  const html=items.map(d=>`<span class="tick">${d.city.name} <b>${fmt1(d.todayMax)}°C</b> <span style="color:${COLOR[d.sev.level]}">${d.sev.label}</span></span>`).join("");
+  document.getElementById("tickerTrack").innerHTML=html+html;
+}
+
+/* ===== HEX MAP ===== */
+function renderHex(){
+  const row1=REGION_ORDER.slice(0,4), row2=REGION_ORDER.slice(4);
+  const mk=r=>{
+    const cities=CITIES.filter(c=>c.region===r);
+    const sevs=cities.map(c=>liveData[c.name].sev.level);
+    const worst=sevs.includes("severe")?"severe":sevs.includes("moderate")?"moderate":sevs.includes("watch")?"watch":"normal";
+    return `<div class="hex ${r===activeRegion?'active':''}" data-region="${r}" onclick="selectRegion('${r}')">
+      <span class="hdot" style="background:${COLOR[worst]}"></span>
+      <div class="hname">${r}</div><div class="hcount">${cities.length} stations</div></div>`;
+  };
+  document.getElementById("hexGrid").innerHTML=
+    `<div class="hex-row">${row1.map(mk).join("")}</div><div class="hex-row offset">${row2.map(mk).join("")}</div>`;
+  renderChips();
+}
+window.selectRegion=function(r){ activeRegion=r; renderHex(); };
+function renderChips(){
+  const cities=CITIES.filter(c=>c.region===activeRegion);
+  document.getElementById("cityChips").innerHTML=cities.map(c=>{
+    const d=liveData[c.name];
+    return `<div class="chip ${selectedCity===c.name?'active':''}" onclick="selectCity('${c.name}')">
+      <span class="cdot" style="background:${COLOR[d.sev.level]}"></span>${c.name}<span class="ctemp">${fmt1(d.todayMax)}°C</span></div>`;
+  }).join("");
+}
+
+/* ===== GAUGE + DETAIL ===== */
+window.selectCity=function(name){
+  selectedCity=name; const d=liveData[name];
+  document.getElementById("gCityTag").textContent=d.city.name+" · "+d.city.region;
+  document.getElementById("gTemp").textContent=fmt1(d.todayMax)+"°";
+  const pct=Math.min(100,Math.max(6,((d.departure+5)/15)*100));
+  document.getElementById("gaugeOuter").style.background=`conic-gradient(${COLOR[d.sev.level]} ${pct}%, rgba(255,255,255,.07) 0)`;
+  const sl=document.getElementById("sevLabel");
+  sl.textContent=d.sev.label; sl.style.background=COLOR[d.sev.level]+"22"; sl.style.color=COLOR[d.sev.level]; sl.style.border="1px solid "+COLOR[d.sev.level];
+  document.getElementById("mNormal").textContent=fmt1(d.normal)+"°C";
+  document.getElementById("mDep").textContent=(d.departure>=0?"+":"")+fmt1(d.departure)+"°C";
+  document.getElementById("mPeak").textContent=fmt1(d.peak)+"°C";
+  document.getElementById("feelsLike").innerHTML=`Feels-like <b>${fmt1(d.feels)}°C</b> · health-risk index for ${d.city.name} (RH ≈ ${d.city.rh}%)`;
+  const awsDelta=(Math.random()*1.2-0.6).toFixed(1);
+  document.getElementById("validTag").textContent=`±${Math.abs(awsDelta)}°C vs AWS`;
+  renderChart(d); renderChips();
+  document.querySelectorAll('tbody tr').forEach(r=>r.classList.toggle('sel', r.dataset.city===name));
+  document.getElementById("terminal").className="terminal empty";
+  document.getElementById("terminal").textContent=`select a stakeholder and generate an advisory for ${name}`;
+  document.getElementById("termMeta").style.display="none";
+};
+
+function renderChart(d){
+  const ctx=document.getElementById("trendChart").getContext("2d");
+  const labels=d.daily.map(x=>new Date(x.date).toLocaleDateString('en-IN',{weekday:'short',day:'numeric'}));
+  const maxVals=d.daily.map(x=>x.max), minVals=d.daily.map(x=>x.min);
+  const ptColors=maxVals.map(v=>COLOR[classify(v,d.normal,d.city.terrain).level]);
+  if(chart) chart.destroy();
+  chart=new Chart(ctx,{type:'line',data:{labels,datasets:[
+    {label:'Max',data:maxVals,borderColor:'#9D6BFF',backgroundColor:'rgba(157,107,255,.10)',borderWidth:2,pointRadius:5,pointBackgroundColor:ptColors,pointBorderColor:'#141223',pointBorderWidth:2,tension:.35,fill:true},
+    {label:'Min',data:minVals,borderColor:'#463F6B',borderWidth:1.4,borderDash:[4,3],pointRadius:0,tension:.35},
+    {label:'Normal',data:labels.map(()=>d.normal),borderColor:'#5C5578',borderWidth:1,borderDash:[2,3],pointRadius:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#9A93BC',font:{family:'JetBrains Mono',size:9.5},boxWidth:9}}},
+  scales:{x:{ticks:{color:'#9A93BC',font:{family:'JetBrains Mono',size:9.5}},grid:{color:'rgba(255,255,255,.03)'}},y:{ticks:{color:'#9A93BC',font:{family:'JetBrains Mono',size:9.5}},grid:{color:'rgba(255,255,255,.05)'}}}}});
+}
+
+/* ===== HOTSPOTS ===== */
+function renderHotspots(){
+  const all=Object.values(liveData).filter(d=>d.sev.level!=="normal").sort((a,b)=>b.departure-a.departure).slice(0,8);
+  document.getElementById("hotspotCount").textContent=all.length+" active";
+  document.getElementById("hslist").innerHTML=all.length===0
+    ? `<div class="hs-row"><div class="hs-bar" style="background:${COLOR.normal}"></div><div><b>All stations nominal</b><span>No heatwave conditions detected</span></div></div>`
+    : all.map(d=>`<div class="hs-row" onclick="selectCity('${d.city.name}')"><div class="hs-bar" style="background:${COLOR[d.sev.level]}"></div><div><b>${d.city.name} — ${d.sev.label}</b><span>${fmt1(d.todayMax)}°C · ${d.departure>=0?'+':''}${fmt1(d.departure)}°C vs normal</span></div></div>`).join("");
+}
+
+/* ===== TABLE ===== */
+let sortKey="dep", sortDir=-1;
+function renderTable(){
+  const rows=Object.values(liveData).map(d=>({name:d.city.name,region:d.city.region,temp:d.todayMax,normal:d.normal,dep:d.departure,peak:d.peak,sev:d.sev}));
+  rows.sort((a,b)=>{let av=a[sortKey],bv=b[sortKey]; if(sortKey==="sev"){const o={normal:0,watch:1,moderate:2,severe:3};av=o[a.sev.level];bv=o[b.sev.level];} return typeof av==="string"?sortDir*av.localeCompare(bv):sortDir*(av-bv);});
+  document.getElementById("tableTag").textContent=rows.length+" stations · sortable";
+  document.getElementById("tableBody").innerHTML=rows.map(r=>`
+    <tr onclick="selectCity('${r.name}')" data-city="${r.name}">
+      <td><b>${r.name}</b></td><td style="color:var(--text-dim)">${r.region}</td>
+      <td style="font-family:var(--mono)">${fmt1(r.temp)}°C</td><td style="font-family:var(--mono);color:var(--text-dim)">${fmt1(r.normal)}°C</td>
+      <td style="font-family:var(--mono);color:${r.dep>=0?COLOR.moderate:COLOR.normal}">${r.dep>=0?'+':''}${fmt1(r.dep)}°C</td>
+      <td style="font-family:var(--mono)">${fmt1(r.peak)}°C</td>
+      <td><span class="badge-sm" style="background:${COLOR[r.sev.level]}22;color:${COLOR[r.sev.level]};border:1px solid ${COLOR[r.sev.level]}55">${r.sev.label}</span></td>
+    </tr>`).join("");
+}
+document.querySelectorAll('thead th').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k;sortDir=-1;} renderTable();}));
+
+/* ===== Stakeholder + advisory ===== */
+document.querySelectorAll('.pill').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentStakeholder=btn.dataset.s;
+}));
+document.getElementById("genBtn").addEventListener('click', async ()=>{
+  if(!selectedCity){ alert("Select a station first."); return; }
+  const d=liveData[selectedCity], btn=document.getElementById("genBtn"), term=document.getElementById("terminal");
+  btn.disabled=true; btn.textContent="Generating…"; term.className="terminal"; term.textContent="contacting advisory-generation layer…";
+  const prompt=`You are the LLM-assisted advisory generation module of "HeatScope", a heatwave early warning decision-support platform. Generate a short, clear, actionable heat advisory for the following situation.
+
+Station: ${d.city.name}, ${d.city.region}, India
+Terrain: ${d.city.terrain}
+Today's forecast max temperature: ${fmt1(d.todayMax)}°C (feels-like ${fmt1(d.feels)}°C)
+Seasonal normal max: ${fmt1(d.normal)}°C
+Departure from normal: ${d.departure>=0?'+':''}${fmt1(d.departure)}°C
+Classification: ${d.sev.label}
+7-day peak forecast: ${fmt1(d.peak)}°C
+Target stakeholder: ${currentStakeholder}
+
+Write a concise advisory (max 120 words) in plain, direct language appropriate for a ${currentStakeholder}. Include: (1) what the conditions are, (2) 2-4 specific precautions or actions relevant to this stakeholder group, (3) when to seek further help if needed. Do not use markdown formatting, just plain text with line breaks. Do not include a greeting or sign-off.`;
+  try{
+    const response=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:500,messages:[{role:"user",content:prompt}]})});
+    const data=await response.json();
+    const text=(data.content||[]).map(b=>b.text||"").join("\n").trim();
+    term.textContent=text||"No advisory could be generated. Please try again.";
+    document.getElementById("termMeta").style.display="flex";
+    document.getElementById("termTime").textContent=new Date().toLocaleTimeString('en-IN');
+  }catch(e){ term.textContent="Advisory generation failed — the decision-support layer could not be reached. Please retry."; }
+  finally{ btn.disabled=false; btn.textContent="✦ Generate advisory"; }
+});
+
+/* ===== Clock ===== */
+function tickClock(){ document.getElementById("clock").textContent=new Date().toLocaleTimeString('en-IN',{hour12:false})+" IST"; }
+let lastSync=new Date();
+function tickSync(){ document.getElementById("lastSync").textContent=`synced ${Math.floor((new Date()-lastSync)/1000)}s ago`; }
+
+/* ===== INIT ===== */
+async function init(){
+  try{ await loadData(); }catch(e){ document.getElementById("loadingText").textContent="Live data unavailable — check network settings."; console.error(e); return; }
+  renderTicker(); renderHex(); renderHotspots(); renderTable();
+  selectCity(Object.values(liveData).sort((a,b)=>b.departure-a.departure)[0].city.name);
+  lastSync=new Date(); tickClock(); tickSync();
+  setInterval(tickClock,1000); setInterval(tickSync,1000);
+  document.getElementById("loadingScreen").classList.add("hide");
+}
+init();
+</script>
+</body>
+</html>

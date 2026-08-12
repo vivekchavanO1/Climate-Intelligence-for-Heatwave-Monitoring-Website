@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeatScope — Climate Intelligence for Heatwave Monitoring</title>
+<meta name="description" content="HeatScope is a heatwave early-warning decision-support platform combining live meteorological data, regional severity classification, and LLM-assisted advisories.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+.hero{padding:64px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center;}
+@media (max-width:900px){.hero{grid-template-columns:1fr;}}
+.hero-cta{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;}
+.hero-art{aspect-ratio:1/1;border-radius:22px;background:linear-gradient(160deg,var(--panel-2),var(--panel));border:1px solid var(--border-soft);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.hero-art .ring{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.06);}
+.hero-art .r1{width:86%;height:86%;}
+.hero-art .r2{width:62%;height:62%;}
+.hero-art .core{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--magma) 0 62%, rgba(255,255,255,.06) 0);display:flex;align-items:center;justify-content:center;}
+.hero-art .core-inner{width:88px;height:88px;border-radius:50%;background:var(--panel-2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--disp);}
+.hero-art .core-inner b{font-size:22px;}
+.hero-art .core-inner span{font-family:var(--mono);font-size:8.5px;color:var(--text-faint);text-transform:uppercase;}
+.stat-strip{display:flex;gap:0;border:1px solid var(--border-soft);border-radius:14px;overflow:hidden;margin-top:8px;}
+.stat{flex:1;padding:16px;text-align:center;border-right:1px solid var(--border-soft);}
+.stat:last-child{border-right:none;}
+.stat b{display:block;font-family:var(--disp);font-size:24px;}
+.stat span{font-family:var(--mono);font-size:9.5px;color:var(--text-faint);text-transform:uppercase;}
+.stake-card{display:flex;gap:12px;align-items:flex-start;}
+.stake-card .ic{width:38px;height:38px;border-radius:10px;background:var(--panel-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phase-mini{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border-soft);}
+.phase-mini:last-child{border-bottom:none;}
+.phase-mini .num{font-family:var(--mono);color:var(--plasma);font-size:12px;width:24px;flex-shrink:0;}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="topnav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html"><span class="nav-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M4.2 4.2l4.2 4.2M15.6 15.6l4.2 4.2M2 12h6M16 12h6M4.2 19.8l4.2-4.2M15.6 8.4l4.2-4.2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>HeatScope</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="active">Home</a>
+      <a href="about.html">About</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <div class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">KJS-CES-01 · Climate, Energy &amp; Sustainability</div>
+        <h1 class="h1">Climate intelligence for heatwave monitoring &amp; early warning.</h1>
+        <p class="lead">HeatScope fuses live meteorological forecasts, region-wise severity classification, and LLM-assisted advisories into one decision-support platform for citizens, farmers, health departments, and local authorities.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="dashboard.html">Open live dashboard →</a>
+          <a class="btn btn-ghost" href="methodology.html">See how it works</a>
+        </div>
+        <div class="stat-strip">
+          <div class="stat"><b>7</b><span>IMD regions</span></div>
+          <div class="stat"><b>19</b><span>stations</span></div>
+          <div class="stat"><b>5</b><span>pipeline phases</span></div>
+          <div class="stat"><b>4</b><span>stakeholder groups</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="ring r1"></div><div class="ring r2"></div>
+        <div class="core"><div class="core-inner"><b>38.4°</b><span>live max</span></div></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:20px;">
+      <div class="eyebrow">Who it's built for</div>
+      <h2 class="h2" style="margin-bottom:22px;">Four stakeholder groups, one shared signal.</h2>
+      <div class="grid-4">
+        <div class="card stake-card"><div class="ic">🧑‍🤝‍🧑</div><div><b>Citizens</b><p class="muted" style="font-size:12.5px;margin-top:4px;">Plain-language heat advisories &amp; precautions.</p></div></div>
+        <div class="card stake-card"><div class="ic">🌾</div><div><b>Farmers</b><p class="muted" style="font-size:12.5px;margin-top:4px;">Crop &amp; livestock heat-risk guidance.</p></div></div>
+        <div class="card stake-card"><div class="ic">🏥</div><div><b>Health Depts.</b><p class="muted" style="font-size:12.5px;margin-top:4px;">Heat-index &amp; hospital preparedness signals.</p></div></div>
+        <div class="card stake-card"><div class="ic">🏛️</div><div><b>Authorities</b><p class="muted" style="font-size:12.5px;margin-top:4px;">Region-wide hotspot &amp; response coordination.</p></div></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0;">
+      <div class="grid-2" style="align-items:center;">
+        <div>
+          <div class="eyebrow">The pipeline</div>
+          <h2 class="h2" style="margin-bottom:14px;">Five phases, from raw data to dispatched advisory.</h2>
+          <p class="lead" style="margin-bottom:10px;">Historical IMD data and simulated IoT weather stations feed AI forecasting, ground-truth validation, and stakeholder-specific advisory generation.</p>
+          <a class="btn btn-ghost" href="methodology.html">View full methodology →</a>
+        </div>
+        <div class="card">
+          <div class="phase-mini"><span class="num">01</span>Meteorological data acquisition</div>
+          <div class="phase-mini"><span class="num">02</span>AI-driven heatwave analytics</div>
+          <div class="phase-mini"><span class="num">03</span>IoT-enabled weather monitoring</div>
+          <div class="phase-mini"><span class="num">04</span>Forecast validation</div>
+          <div class="phase-mini"><span class="num">05</span>Advisory &amp; decision support</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="nav-brand" style="margin-bottom:8px;">HeatScope</div>
+      <p>Prototype decision-support platform for the KJS-CES-01 use case, developed by Vivek Santosh Chavan. All forecasts and advisories are illustrative and require human-in-the-loop review before real-world dissemination.</p>
+    </div>
+    <div class="foot-links">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="dashboard.html">Dashboard</a><a href="methodology.html">Methodology</a><a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+<script src="assets/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — HeatScope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+.obj-list{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+.obj-list li{list-style:none;display:flex;gap:12px;padding:14px 16px;background:var(--panel);border:1px solid var(--border-soft);border-radius:12px;}
+.obj-list b.n{font-family:var(--mono);color:var(--plasma);flex-shrink:0;}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.tag{font-family:var(--mono);font-size:10.5px;padding:5px 10px;border-radius:16px;background:var(--panel);border:1px solid var(--border-soft);color:var(--text-dim);}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="topnav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html"><span class="nav-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 16v6M4.2 4.2l4.2 4.2M15.6 15.6l4.2 4.2M2 12h6M16 12h6M4.2 19.8l4.2-4.2M15.6 8.4l4.2-4.2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" fill="#fff"/></svg></span>HeatScope</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="about.html" class="active">About</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <div class="shell section">
+    <div class="eyebrow">About the project</div>
+    <h1 class="h1" style="margin-bottom:14px;">Use Case KJS-CES-01</h1>
+    <p class="lead">Climate Intelligence for Heatwave Monitoring, Prediction, and Early Warning — developed by Vivek Santosh Chavan of Engineering's AI use-case integration framework, in collaboration with the India Meteorological Department (IMD), Mumbai–Pune.</p>
+
+    <div class="grid-2" style="margin-top:40px;align-items:start;">
+      <div class="card">
+        <h2 class="h2" style="font-size:18px;margin-bottom:10px;">Problem statement</h2>
+        <p class="muted" style="line-height:1.7;font-size:13.5px;">Heatwaves are among the most damaging extreme weather events, growing more frequent and intense with climate change. Their impact on public health, agriculture, and daily life varies sharply by region, making accurate, localized forecasting and early warning essential — yet difficult to deliver at scale.</p>
+      </div>
+      <div class="card">
+        <h2 class="h2" style="font-size:18px;margin-bottom:10px;">Background</h2>
+        <p class="muted" style="line-height:1.7;font-size:13.5px;">IMD continuously monitors and forecasts heatwave conditions across India, but the country's diverse climatic zones call for more granular, region-wise intelligence. HeatScope explores how AI-driven spatio-temporal analysis and IoT-based ground observations can sharpen that picture and turn it into stakeholder-ready advisories.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;">
+      <h2 class="h2" style="margin-bottom:6px;">Objectives</h2>
+      <ul class="obj-list">
+        <li><b class="n">01</b><span>Analyze spatio-temporal temperature patterns and heatwave behaviour through region-wise, seasonal analysis.</span></li>
+        <li><b class="n">02</b><span>Develop AI-driven models for temperature forecasting, heatwave prediction, hotspot identification, and severity classification.</span></li>
+        <li><b class="n">03</b><span>Design IoT-enabled Automated Weather Stations for localized monitoring and forecast validation.</span></li>
+        <li><b class="n">04</b><span>Build visualization, decision-support, and early-warning tools for heatwave advisory dissemination.</span></li>
+      </ul>
+    </div>
+
+    <div class="grid-2" style="margin-top:40px;">
+      <div class="card">
+        <h2 class="h2" style="font-size:18px;margin-bottom:8px;">Collaborating organization</h2>
+        <p class="muted" style="font-size:13.5px;">India Meteorological Department (IMD), Mumbai–Pune</p>
+        <h2 class="h2" style="font-size:18px;margin:18px 0 8px;">Faculty owner</h2>
+        <p class="muted" style="font-size:13.5px;">Dr. Radhika Kotecha, Professor &amp; Head, Department of Information Technology, K J Somaiya Institute of Technology</p>
+      </div>
+      <div class="card">
+        <h2 class="h2" style="font-size:18px;margin-bottom:8px;">Beneficiaries</h2>
+        <div class="tag-row">
+          <span class="tag">Disaster Management Authorities</span>
+          <span class="tag">Municipal Corporations</span>
+          <span class="tag">Agricultural Agencies</span>
+          <span class="tag">Health Departments &amp; Hospitals</span>
+          <span class="tag">Citizens</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-cta" style="display:flex;gap:12px;margin-top:36px;">
+      <a class="btn btn-primary" href="dashboard.html">Explore the live dashboard →</a>
+      <a class="btn btn-ghost" href="methodology.html">Read the full methodology</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="nav-brand" style="margin-bottom:8px;">HeatScope</div>
+      <p>Prototype decision-support platform for the KJS-CES-01 use case, developed by Vivek Santosh Chavan. All forecasts and advisories are illustrative and require human-in-the-loop review before real-world dissemination.</p>
+    </div>
+    <div class="foot-links">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="dashboard.html">Dashboard</a><a href="methodology.html">Methodology</a><a href="contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+<script src="assets/nav.js"></script>
+</body>
+</html>
